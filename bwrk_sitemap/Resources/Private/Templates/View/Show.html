@@ -1,0 +1,33 @@
+{namespace bwrk=BERGWERK\BwrkSitemap\ViewHelpers}<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+	<f:for each="{pages}" as="page">
+		<url>
+			<loc>
+                <f:uri.page pageUid="{page.uid}" absolute="1"/>
+            </loc>
+			<lastmod>
+                <f:format.date format="Y-m-d">@{page.tstamp}</f:format.date>
+            </lastmod>
+			<changefreq>weekly</changefreq>
+		</url>
+	</f:for>
+    <f:for each="{products}" as="product">
+        <url>
+            <loc>
+                <bwrk:Replace search="&" replace="&amp;">
+                    <f:uri.action extensionName="bwrkproducts"
+                                  pluginName="Item"
+                                  controller="Item"
+                                  action="index"
+                                  pageUid="{product.detailPid}"
+                                  arguments="{itemUid:product.uid}"
+                                  absolute="1"/>
+                </bwrk:Replace>
+            </loc>
+            <lastmod>
+                <f:format.date format="Y-m-d">@{product.tstamp}</f:format.date>
+            </lastmod>
+            <changefreq>weekly</changefreq>
+        </url>
+    </f:for>
+</urlset>

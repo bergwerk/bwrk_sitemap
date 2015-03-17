@@ -1,0 +1,49 @@
+#temp {
+#	BwrkSitemapView = USER_INT
+#	BwrkSitemapView {
+#		userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+#		vendorName = BERGWERK
+#		extensionName = BwrkSitemap
+#		pluginName = bwrkSitemap
+#	}
+#}
+
+page >
+page = PAGE
+page {
+	config {
+		simulateStaticDocuments = 0
+		tx_cooluri_enable = 1
+		noCache = 1
+		disableAllHeaderCode = 1
+		additionalHeaders = Content-Type: text/xml
+	}
+
+	10 = USER_INT
+	10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        vendorName = BERGWERK
+        extensionName = BwrkSitemap
+        pluginName = bwrkSitemap
+    }
+}
+
+plugin.tx_bwrksitemap.settings {
+    products {
+        detailPid {
+            default = 59
+
+            // Professionell
+            18 = 72
+
+            // Wärmepumpe
+            19 = 59
+
+            // Zubehör
+            // 20 < .default
+
+            // Lüftung
+            21 = 80
+        }
+    }
+}
