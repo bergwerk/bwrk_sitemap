@@ -1,9 +1,7 @@
 <?php
 namespace BERGWERK\BwrkSitemap\Controller;
 
-use BERGWERK\BwrkProducts\Domain\Model\Item;
-use BERGWERK\BwrkProducts\Domain\Repository\ItemRepository;
-use BERGWERK\BwrkSitemap\Configuration;
+use BERGWERK\BwrkSitemap\Domain\Model\Content;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
@@ -15,6 +13,26 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     protected $viewRepository;
 
     /**
+     * @var \BERGWERK\BwrkSitemap\Domain\Repository\ContentRepository
+     * @inject
+     */
+    protected $contentRepository;
+
+
+    protected $cObj;
+    protected $pid;
+
+    protected function initializeAction()
+    {
+        $this->cObj = $this->configurationManager->getContentObject();
+        $this->pid = $this->cObj->data['uid'];
+
+        $this->getConfiguration();
+
+    }
+
+
+    /**
      * showAction function.
      *
      * @access public
@@ -24,42 +42,88 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     {
         $siteRoot = $this->viewRepository->getSiteRoot();
 
-        for ($i = 0; $i < count($siteRoot); $i++) {
-            $rootID = $siteRoot[$i]['uid'];
-            $tree = $this->viewRepository->getAllPages($rootID);
-        }
+        $pages = $this->getPages($siteRoot);
 
-        $this->view->assign('pages', $tree);
 
-        $this->assignProducts();
+        $tree = $this->excludePages($pages);
+
+        DebuggerUtility::var_dump($this->settings);
+        DebuggerUtility::var_dump($pages);
+
+        $this->view->assign('pages', $pages);
+
     }
 
-    private function assignProducts()
+
+    private function getPages($sites)
     {
-        $productRepository = ItemRepository::create();
-        $products = $productRepository->findAll();
-
-        $view = array();
-
-        /** @var Item $product */
-        foreach ($products as $product)
+        $pages = array();
+        foreach($sites as $site)
         {
-            $category = $product->getCategory();
+            $pages[] = $this->viewRepository->getAllPages($site['uid']);
+        }
+        return $pages;
+    }
 
-            $detailPid = Configuration::getDetailPidDefault();
 
-            if (!is_null($category))
+
+
+    private function excludePages($pages)
+    {
+        if(empty($this->settings['pagesToExclude'])) return $pages;
+
+        $pagesToExclude = explode(',', $this->settings['pagesToExclude']);
+
+        if($this->settings['recursive'] == 0)
+        {
+            $pagesTmp = array();
+            foreach($pages as $page)
             {
-                $detailPid = Configuration::getDetailPidByCategoryUid($category->getUid());
+                if(!in_array($page['uid'], $pagesToExclude))
+                {
+                    $pagesTmp[] = $page;
+                }
             }
+            $pages = $pagesTmp;
+        } else {
 
-            $view[] = array(
-                'uid' => $product->getUid(),
-                'detailPid' => $detailPid,
-                'tstamp' => time()
-            );
         }
 
-        $this->view->assign('products', $view);
+
+
+
+
+
+        return $pages;
+    }
+
+    private function getConfiguration()
+    {
+        $conf = array();
+
+        /** @var Content $contentElement */
+        $contentElements = $this->contentRepository->findByPid($this->pid);
+        foreach($contentElements as $contentElement)
+        {
+            if($contentElement->getListType() == 'bwrksitemap_bwrksitemap')
+            {
+                $this->configurationManager->getContentObject()->readFlexformIntoConf($contentElement->getPiFlexform(), $conf);
+                break;
+            }
+        }
+
+        $tmpConf = $conf;
+        $conf = array();
+        foreach($tmpConf as $key => $value)
+        {
+            $conf[str_replace('settings.', '', $key)] = $value;
+        }
+
+        $settings = $this->settings;
+        foreach($settings as $key => $value)
+        {
+            $settings[$key] = $conf[$key];
+        }
+        $this->settings = $settings;
     }
 }

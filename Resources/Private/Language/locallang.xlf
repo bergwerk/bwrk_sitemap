@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-05-13T13:42:25Z" product-name="bwrk_sitemap">
+		<header/>
+		<body>
+			<trans-unit id="bwrk_sitemap.settings.title">
+				<source>Configuration</source>
+			</trans-unit>
+            <trans-unit id="bwrk_sitemap.settings.recursive">
+                <source>Recursive?</source>
+            </trans-unit>
+            <trans-unit id="bwrk_sitemap.settings.pagesToExclude">
+                <source>Exclude Pages?</source>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>
