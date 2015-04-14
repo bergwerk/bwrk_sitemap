@@ -18,8 +18,22 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $contentRepository;
 
+    /**
+     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @inject
+     */
+    protected $signalSlotDispatcher;
+
+    /**
+     * @var array
+     */
     protected $pagesToExclude;
+
     protected $cObj;
+
+    /**
+     * @var int
+     */
     protected $pid;
 
     protected function initializeAction()
@@ -29,10 +43,7 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 
         $this->getConfiguration();
         $this->pagesToExclude = $this->getPagesToExclude();
-
-
     }
-
 
     /**
      * showAction function.
@@ -43,7 +54,42 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     public function showAction()
     {
         $pages = $this->getPagesWithoutExcludes();
+
+
+        /*
+         * Signal for other Extensions
+         */
+
+        /**
+         * @var array $linksArr
+         */
+        $linksArr = array();
+        $linksArr[] = array(
+            'uri' => 'http://google.de/',
+            'lastModified' => time()
+        );
+
+        $dataArr = array();
+        $dataArr[] = array(
+            'plugin' => 'Plugin',
+            'controller' => 'Controller',
+            'action' => 'Action',
+            'extension' => 'Extension',
+            'pageUid' => 1,
+            'lastModified' => time(),
+            'arguments' => array(
+                'key' => 'value'
+            )
+        );
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'addExtensionLinks', array(&$linksArr, &$dataArr));
+
+        unset($linksArr[0]);
+        unset($dataArr[0]);
+
+
         $this->view->assign('pages', $pages);
+        $this->view->assign('linkArr', $linksArr);
+        $this->view->assign('dataArr', $dataArr);
     }
 
     private function getPagesWithoutExcludes()
@@ -62,6 +108,10 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         return $newPages;
     }
 
+    /**
+     * @param array $siteRoots
+     * @return array
+     */
     private function getPages($siteRoots)
     {
         $pages = array();
@@ -100,12 +150,20 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         return $whichPagesUids;
     }
 
-
+    /**
+     * @param int $pid
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
     private function findPages($pid)
     {
         return $this->viewRepository->getAllPagesForPid($pid);
     }
 
+    /**
+     * @param int $pid
+     * @param array $pagesTmp
+     * @return array
+     */
     private function findPagesRecursive($pid, &$pagesTmp)
     {
         $pages = $this->findPages($pid);
@@ -119,59 +177,6 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         }
         return $pagesTmp;
     }
-
-//
-//
-//    private function getPages($sites)
-//    {
-//        $pages = array();
-//        foreach($sites as $site)
-//        {
-//            $pages[] = $this->viewRepository->getAllPages($site['uid']);
-//        }
-//        return $pages;
-//    }
-//
-//    private function excludePages($pages)
-//    {
-//        if(empty($this->settings['pagesToExclude'])) return $pages;
-//
-//        $pagesToExclude = explode(',', $this->settings['pagesToExclude']);
-//
-//        if($this->settings['recursive'] == 0)
-//        {
-//            $pagesTmp = array();
-//            foreach($pages as $page)
-//            {
-//                if(!in_array($page['uid'], $pagesToExclude))
-//                {
-//                    $pagesTmp[] = $page;
-//                }
-//            }
-//            $pages = $pagesTmp;
-//        } else {
-//            $pages = array();
-//            foreach($pagesToExclude as $pageToExclude)
-//            {
-//                $this->getPagesRecursive($pageToExclude, $pages);
-//            }
-//        }
-//        return $pages;
-//    }
-//
-//    private function getPagesRecursive($pid, &$pagesTmp)
-//    {
-//        $pages = $this->viewRepository->getAllPagesForPid($pid);
-//        if(count($pages) > 0)
-//        {
-//            foreach($pages as $page)
-//            {
-//                $pagesTmp[] = $page;
-//                $this->getPagesRecursive($page['uid'], $pagesTmp);
-//            }
-//        }
-//        return $pagesTmp;
-//    }
 
 
     private function getConfiguration()
