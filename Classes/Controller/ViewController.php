@@ -18,7 +18,7 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $contentRepository;
 
-
+    protected $pagesToExclude;
     protected $cObj;
     protected $pid;
 
@@ -28,6 +28,8 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->pid = $this->cObj->data['uid'];
 
         $this->getConfiguration();
+        $this->pagesToExclude = $this->getPagesToExclude();
+
 
     }
 
@@ -40,62 +42,137 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function showAction()
     {
-        $siteRoot = $this->viewRepository->getSiteRoot();
-
-        $pages = $this->getPages($siteRoot);
-
-
-        $tree = $this->excludePages($pages);
-
-        DebuggerUtility::var_dump($this->settings);
-        DebuggerUtility::var_dump($pages);
-
+        $pages = $this->getPagesWithoutExcludes();
         $this->view->assign('pages', $pages);
-
     }
 
+    private function getPagesWithoutExcludes()
+    {
+        $siteRoot = $this->viewRepository->getSiteRoot();
+        $pages = $this->getPages($siteRoot);
 
-    private function getPages($sites)
+        $newPages = array();
+        foreach($pages as $page)
+        {
+            if(!in_array($page['uid'], $this->pagesToExclude))
+            {
+                $newPages[] = $page;
+            }
+        }
+        return $newPages;
+    }
+
+    private function getPages($siteRoots)
     {
         $pages = array();
-        foreach($sites as $site)
+        foreach($siteRoots as $siteRoot)
         {
-            $pages[] = $this->viewRepository->getAllPages($site['uid']);
+            $this->findPagesRecursive($siteRoot['uid'], $pages);
         }
         return $pages;
     }
 
-
-
-
-    private function excludePages($pages)
+    private function getPagesToExclude()
     {
-        if(empty($this->settings['pagesToExclude'])) return $pages;
+        if(empty($this->settings['pagesToExclude'])) return array();
 
         $pagesToExclude = explode(',', $this->settings['pagesToExclude']);
 
-        if($this->settings['recursive'] == 0)
+        $whichPagesUids = array();
+        $whichPages = array();
+        foreach($pagesToExclude as $pageToExclude)
         {
-            $pagesTmp = array();
-            foreach($pages as $page)
+            if($this->settings['recursive'] == 1)
             {
-                if(!in_array($page['uid'], $pagesToExclude))
+                $this->findPagesRecursive($pageToExclude, $whichPages);
+            } else {
+                $tmpPages = $this->findPages($pageToExclude);
+                foreach($tmpPages as $tmpPage)
                 {
-                    $pagesTmp[] = $page;
+                    $whichPages[] = $tmpPage;
                 }
             }
-            $pages = $pagesTmp;
-        } else {
-
         }
-
-
-
-
-
-
-        return $pages;
+        foreach($whichPages as $whichPage)
+        {
+            $whichPagesUids[] = $whichPage['uid'];
+        }
+        return $whichPagesUids;
     }
+
+
+    private function findPages($pid)
+    {
+        return $this->viewRepository->getAllPagesForPid($pid);
+    }
+
+    private function findPagesRecursive($pid, &$pagesTmp)
+    {
+        $pages = $this->findPages($pid);
+        if(count($pages) > 0)
+        {
+            foreach($pages as $page)
+            {
+                $pagesTmp[] = $page;
+                $this->findPagesRecursive($page['uid'], $pagesTmp);
+            }
+        }
+        return $pagesTmp;
+    }
+
+//
+//
+//    private function getPages($sites)
+//    {
+//        $pages = array();
+//        foreach($sites as $site)
+//        {
+//            $pages[] = $this->viewRepository->getAllPages($site['uid']);
+//        }
+//        return $pages;
+//    }
+//
+//    private function excludePages($pages)
+//    {
+//        if(empty($this->settings['pagesToExclude'])) return $pages;
+//
+//        $pagesToExclude = explode(',', $this->settings['pagesToExclude']);
+//
+//        if($this->settings['recursive'] == 0)
+//        {
+//            $pagesTmp = array();
+//            foreach($pages as $page)
+//            {
+//                if(!in_array($page['uid'], $pagesToExclude))
+//                {
+//                    $pagesTmp[] = $page;
+//                }
+//            }
+//            $pages = $pagesTmp;
+//        } else {
+//            $pages = array();
+//            foreach($pagesToExclude as $pageToExclude)
+//            {
+//                $this->getPagesRecursive($pageToExclude, $pages);
+//            }
+//        }
+//        return $pages;
+//    }
+//
+//    private function getPagesRecursive($pid, &$pagesTmp)
+//    {
+//        $pages = $this->viewRepository->getAllPagesForPid($pid);
+//        if(count($pages) > 0)
+//        {
+//            foreach($pages as $page)
+//            {
+//                $pagesTmp[] = $page;
+//                $this->getPagesRecursive($page['uid'], $pagesTmp);
+//            }
+//        }
+//        return $pagesTmp;
+//    }
+
 
     private function getConfiguration()
     {

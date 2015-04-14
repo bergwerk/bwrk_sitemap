@@ -6,7 +6,7 @@ page {
 		tx_cooluri_enable = 1
 		noCache = 1
 		disableAllHeaderCode = 1
-#		additionalHeaders = Content-Type: text/xml
+		additionalHeaders = Content-Type: text/xml
 	}
 
 	10 = USER_INT
