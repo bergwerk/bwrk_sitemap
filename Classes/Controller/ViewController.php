@@ -1,9 +1,39 @@
 <?php
 namespace BERGWERK\BwrkSitemap\Controller;
 
-use BERGWERK\BwrkSitemap\Domain\Model\Content;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+/***************************************************************
+ *  Copyright notice
+ *
+ *  (c) 2015 Georg Dümmler <gd@bergwerk.ag>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ *
+ * @author	Georg Dümmler <gd@bergwerk.ag>
+ * @package	TYPO3
+ * @subpackage	bwrk_onepage
+ ***************************************************************/
 
+use BERGWERK\BwrkSitemap\Domain\Model\Content;
+
+/**
+ * Class ViewController
+ * @package BERGWERK\BwrkSitemap\Controller
+ */
 class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
     /**
@@ -29,6 +59,9 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $pagesToExclude;
 
+    /**
+     * @var
+     */
     protected $cObj;
 
     /**
@@ -36,6 +69,9 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $pid;
 
+    /**
+     *
+     */
     protected function initializeAction()
     {
         $this->cObj = $this->configurationManager->getContentObject();
@@ -92,6 +128,9 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->view->assign('dataArr', $dataArr);
     }
 
+    /**
+     * @return array
+     */
     private function getPagesWithoutExcludes()
     {
         $siteRoot = $this->viewRepository->getSiteRoot();
@@ -122,6 +161,9 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         return $pages;
     }
 
+    /**
+     * @return array
+     */
     private function getPagesToExclude()
     {
         if(empty($this->settings['pagesToExclude'])) return array();
@@ -179,6 +221,9 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     }
 
 
+    /**
+     *
+     */
     private function getConfiguration()
     {
         $conf = array();
