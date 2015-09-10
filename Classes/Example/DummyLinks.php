@@ -1,5 +1,7 @@
 <?php
 
+namespace BERGWERK\BwrkSitemap\Example;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -27,24 +29,46 @@
  * @subpackage	bwrk_onepage
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array(
-    'title' => 'Sitemap',
-    'description' => 'Simple TYPO3 Sitemap-Extension which allows you to create a xml-sitemap from your page-tree and external plugins via the TYPO3 Signal-Slot-Dispatcher.',
-    'category' => 'plugin',
-    'author' => 'BERGWERK [GD]',
-    'author_email' => 'gd@bergwerk.ag',
-    'author_company' => 'BERGWERK Werbeagentur GmbH',
-    'state' => 'stable',
-    'internal' => '',
-    'uploadfolder' => '0',
-    'createDirs' => '',
-    'clearCacheOnLoad' => 0,
-    'version' => '1.2.0',
-    'constraints' => array(
-        'depends' => array(
-            'typo3' => '6.2.0-6.2.99',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
-    ),
-);
+/**
+ * Class DummyLinks
+ *
+ * Example: How to register this Signal-Slot-Dispatcher in your ext_localconf
+ *
+    \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher')->connect(
+        'BERGWERK\\BwrkSitemap\\Controller\\ViewController',
+        'addExtensionLinks',
+        'BERGWERK\\BwrkSitemap\\Example\\DummyLinks',
+        'addLinks'
+    );
+ *
+ * @package BERGWERK\BwrkSitemap\Example
+ */
+class DummyLinks
+{
+    /**
+     * @return array
+     */
+    protected function getLinks()
+    {
+        // ... establish database connection, get models and generate urls
+
+        return array(
+            'http://www.facebook.com',
+            'http://www.twitter.com'
+        );
+    }
+
+    /**
+     * @param array $links
+     */
+    public function addLinks(&$links)
+    {
+        foreach ($this->getLinks() as $link)
+        {
+            $links[] = array(
+                'uri' => $link,
+                'lastModified' => time()
+            );
+        }
+    }
+}
