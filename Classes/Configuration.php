@@ -26,7 +26,7 @@ namespace BERGWERK\BwrkSitemap;
  *
  * @author	Georg Dümmler <gd@bergwerk.ag>
  * @package	TYPO3
- * @subpackage	bwrk_onepage
+ * @subpackage	bwrk_sitemap
  ***************************************************************/
 
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;

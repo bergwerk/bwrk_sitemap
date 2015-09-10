@@ -24,7 +24,7 @@
  *
  * @author	Georg Dümmler <gd@bergwerk.ag>
  * @package	TYPO3
- * @subpackage	bwrk_onepage
+ * @subpackage	bwrk_sitemap
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
@@ -39,7 +39,7 @@ $EM_CONF[$_EXTKEY] = array(
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.3.0',
+    'version' => '1.3.1',
     'constraints' => array(
         'depends' => array(
             'typo3' => '6.2.0-6.2.99',

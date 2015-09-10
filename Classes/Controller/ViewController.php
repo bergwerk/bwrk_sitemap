@@ -25,7 +25,7 @@ namespace BERGWERK\BwrkSitemap\Controller;
  *
  * @author	Georg Dümmler <gd@bergwerk.ag>
  * @package	TYPO3
- * @subpackage	bwrk_onepage
+ * @subpackage	bwrk_sitemap
  ***************************************************************/
 
 use BERGWERK\BwrkSitemap\Domain\Model\Content;
