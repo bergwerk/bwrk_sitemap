@@ -29,6 +29,7 @@ namespace BERGWERK\BwrkSitemap\Controller;
  ***************************************************************/
 
 use BERGWERK\BwrkSitemap\Domain\Model\Content;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class ViewController
@@ -220,6 +221,23 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         return $pagesTmp;
     }
 
+    private function findPagesRecursiveMultiDimension($uId)
+    {
+        $currentLayer = array(
+            'obj' => $this->viewRepository->findByUid($uId)
+        );
+
+        $children = array();
+
+        foreach ($this->findPages($uId) as $childPage)
+        {
+            $children[] = $this->findPagesRecursiveMultiDimension($childPage['uid']);
+        }
+
+        $currentLayer['children'] = $children;
+
+        return $currentLayer;
+    }
 
     /**
      *
@@ -252,5 +270,14 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
             $settings[$key] = $conf[$key];
         }
         $this->settings = $settings;
+    }
+
+    public function htmlAction()
+    {
+        $rootPageUid = (int) $GLOBALS['TSFE']->rootLine[0]['uid'];
+
+        $pageTree = $this->findPagesRecursiveMultiDimension($rootPageUid);
+
+        $this->view->assign('pageTree', $pageTree);
     }
 }

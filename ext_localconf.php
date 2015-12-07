@@ -10,3 +10,13 @@
 	        'View' => 'show',
 	    )
 	);
+
+	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+		'BERGWERK.'.$_EXTKEY,
+		'Pi2',
+		array(
+				'View' => 'html',
+		),array(
+				'View' => 'html',
+		)
+	);

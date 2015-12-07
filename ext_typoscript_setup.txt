@@ -6,6 +6,11 @@ config.tx_extbase {
                     tableName = tt_content
                 }
             }
+            BERGWERK\BwrkSitemap\Domain\Model\View {
+                mapping {
+                    tableName = pages
+                }
+            }
         }
     }
 }

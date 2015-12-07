@@ -1,50 +1,40 @@
 <?php
 
 /***************************************************************
- *  Copyright notice
+ * Extension Manager/Repository config file for ext "bwrk_sitemap".
  *
- *  (c) 2015 Georg Dümmler <gd@bergwerk.ag>
- *  All rights reserved
+ * Auto generated 02-12-2015 16:55
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- *
- * @author	Georg Dümmler <gd@bergwerk.ag>
- * @package	TYPO3
- * @subpackage	bwrk_sitemap
+ * Manual updates:
+ * Only the data in the array - everything else is removed by next
+ * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array(
-    'title' => 'Sitemap',
-    'description' => 'Simple TYPO3 Sitemap-Extension which allows you to create a xml-sitemap from your page-tree and external plugins via the TYPO3 Signal-Slot-Dispatcher.',
-    'category' => 'plugin',
-    'author' => 'BERGWERK [GD]',
-    'author_email' => 'gd@bergwerk.ag',
-    'author_company' => 'BERGWERK Werbeagentur GmbH',
-    'state' => 'stable',
-    'internal' => '',
-    'uploadfolder' => '0',
-    'createDirs' => '',
-    'clearCacheOnLoad' => 0,
-    'version' => '1.4.0',
-    'constraints' => array(
-        'depends' => array(
-            'typo3' => '6.2.0-7.6.99',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
+$EM_CONF[$_EXTKEY] = array (
+  'title' => 'Sitemap',
+  'description' => 'Simple TYPO3 Sitemap-Extension which allows you to create a xml-sitemap from your page-tree and external plugins via the TYPO3 Signal-Slot-Dispatcher.',
+  'category' => 'plugin',
+  'author' => 'Georg Dümmler, Daniel Maier',
+  'author_email' => 'gd@bergwerk.ag, dm@bergwerk.ag',
+  'author_company' => 'BERGWERK Werbeagentur GmbH',
+  'state' => 'stable',
+  'uploadfolder' => false,
+  'createDirs' => '',
+  'clearCacheOnLoad' => 0,
+  'version' => '1.5.0',
+  'constraints' => 
+  array (
+    'depends' => 
+    array (
+      'typo3' => '6.2.0-7.6.99',
     ),
+    'conflicts' => 
+    array (
+    ),
+    'suggests' => 
+    array (
+    ),
+  ),
+  'clearcacheonload' => false,
 );
+
