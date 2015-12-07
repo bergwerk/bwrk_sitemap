@@ -1,5 +1,7 @@
 <li>
-    <a href="#">{page.obj.title}</a>
+    <f:link.page pageUid="{page.obj.uid}">
+        {page.obj.title}
+    </f:link.page>
     <ul>
         <f:for each="{page.children}" as="child">
             <f:render partial="View/Html/RenderListItem" arguments="{page:child}" />
