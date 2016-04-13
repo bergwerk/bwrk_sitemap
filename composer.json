@@ -1,0 +1,10 @@
+{
+  "name": "bergwerk/bwrk-sitemap",
+  "type": "typo3-cms-extension",
+  "description": "Sitemap-Extension for TYPO3",
+  "homepage": "https://www.bergwerk.ag/",
+  "license": ["GPL-2.0+"],
+  "keywords": ["TYPO3 CMS", "sitemap"],
+  "version": "1.5.1",
+  "minimum-stability":"stable"
+}
