@@ -1,10 +1,38 @@
 {
   "name": "bergwerk/bwrk-sitemap",
-  "type": "typo3-cms-extension",
-  "description": "Sitemap-Extension for TYPO3",
-  "homepage": "https://www.bergwerk.ag/",
-  "license": ["GPL-2.0+"],
+  "description": "Simple TYPO3 Sitemap-Extension which allows you to create a xml-sitemap from your page-tree and external plugins via the TYPO3 Signal-Slot-Dispatcher.",
   "keywords": ["TYPO3 CMS", "sitemap"],
-  "version": "1.5.1",
-  "minimum-stability":"stable"
+  "version": "1.5.2",
+  "minimum-stability":"stable",
+  "type": "typo3-cms-extension",
+  "homepage": "https://www.bergwerk.ag",
+  "authors": [
+      {
+          "name": "BERGWERK",
+          "role": "Developer",
+          "homepage": "https://www.bergwerk.ag"
+      }
+  ],
+  "license": ["GPL-2.0-or-later"],
+  "require": {
+    "typo3/cms-core": ">7.6"
+  },
+  "replace": {
+    "bwrk_sitemap": "self.version",
+    "typo3-ter/bwrk_sitemap": "self.version"
+  },
+  "autoload": {
+    "psr-4": {
+      "BERGWERK\\BwrkSitemap\\": "Classes"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0.0"
+    },
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  }
 }
