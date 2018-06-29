@@ -134,8 +134,12 @@ class ViewController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     private function getPagesWithoutExcludes()
     {
-        $siteRoot = $this->viewRepository->getSiteRoot();
-        $pages = $this->getPages($siteRoot);
+        if ($GLOBALS['TSFE']->page['is_siteroot']) {
+            $siteRoots[] = array('uid' => $GLOBALS['TSFE']->id);
+        } else {
+            $siteRoots = $this->viewRepository->getSiteRoot();
+        }
+        $pages = $this->getPages($siteRoots);
 
         $newPages = array();
         foreach($pages as $page)
